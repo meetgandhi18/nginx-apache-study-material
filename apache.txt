@@ -1,0 +1,186 @@
+sudo systemctl start apache2
+sudo systemctl stop apache2
+sudo systemctl restart apache2
+sudo systemctl reload apache2
+sudo systemctl status apache2
+ 
+Apache Control Utility
+apachectl configtest
+sudo apachectl restart
+ 
+Site Management Commands
+Enable a site: sudo a2ensite example.conf
+Disable a site: sudo a2dissite example.conf
+After enabling/disabling Always reload
+List active VirtualHosts:apachectl -S
+ 
+Module Management Commands
+Enable module : sudo a2enmod rewrite
+Disable module : sudo a2dismod rewrite
+Loaded Modules : apache2ctl -M
+After enabling/disabling Restart needed
+ 
+Important files.
+Main config:/etc/apache2/apache2.conf
+Ports:/etc/apache2/ports.conf
+Sites:/etc/apache2/sites-available/
+Enabled sites:/etc/apache2/sites-enabled/
+Modules:/etc/apache2/mods-enabled/
+Logs:/var/log/apache2/
+ 
+| Command                   | Purpose            |
+| ------------------------- | ------------------ |
+| systemctl start apache2   | start server       |
+| systemctl stop apache2    | stop server        |
+| systemctl restart apache2 | restart server     |
+| systemctl reload apache2  | reload config      |
+| apachectl configtest      | test config        |
+| a2ensite                  | enable site        |
+| a2dissite                 | disable site       |
+| a2enmod                   | enable module      |
+| a2dismod                  | disable module     |
+| apache2ctl -M             | list modules       |
+| apache2ctl -S             | list virtual hosts |
+ 
+ 
+A VirtualHost allows one Apache server to host multiple websites or applications.
+    Without VirtualHosts:
+        1 server → 1 website
+ 
+    With VirtualHosts:
+        1 server → many websites
+ 
+    Example:
+        example.com
+        api.example.com
+        blog.example.com
+        admin.example.com
+ 
+    All run on one Apache instance.
+ 
+ 
+Why Virtual Hosts Exist
+Reasons:
+    Hosting multiple domains on one machine
+    Separate configs per site
+    Different logs
+    Different SSL certificates
+    Different document roots
+    Example structure:
+ 
+/var/www
+├── site1
+│    └── public
+├── site2
+│    └── public
+└── api
+      └── public
+ 
+Types of Virtual Hosts
+ 
+ 
+->There are 2 main types.
+ 
+1️⃣ Name-Based Virtual Hosts (most common)
+    Different domains on same IP.
+    example.com
+        blog.example.com
+        api.example.com
+    Example config:
+        <VirtualHost *:80>
+            ServerName example.com
+        </VirtualHost>
+        <VirtualHost *:80>
+            ServerName blog.example.com
+        </VirtualHost>
+ 
+Apache chooses based on Host header.
+2️⃣ IP-Based Virtual Hosts
+    Different IP addresses.
+    Example:
+        192.168.1.10 → example.com
+        192.168.1.11 → api.example.com
+    Config:
+        <VirtualHost 192.168.1.10:80>
+            ServerName example.com
+        </VirtualHost>
+        <VirtualHost 192.168.1.11:80>
+            ServerName api.example.com
+        </VirtualHost>
+    Less common today.
+ 
+->Basic VirtualHost Configuration
+ 
+Typical config:
+<VirtualHost *:80>
+    ServerName example.com
+    ServerAlias www.example.com
+    DocumentRoot /var/www/example/public
+    ErrorLog ${APACHE_LOG_DIR}/example_error.log
+    CustomLog ${APACHE_LOG_DIR}/example_access.log combined
+</VirtualHost>
+ 
+VirtualHost
+    <VirtualHost *:80>
+    Meaning:
+        * = all IP addresses
+        80 = HTTP port
+ 
+ServerName
+    ServerName example.com
+    Primary domain name.
+ 
+ServerAlias
+    ServerAlias www.example.com blog.example.com
+    Additional domain names.
+ 
+DocumentRoot
+    DocumentRoot /var/www/example/public
+    Where website files live.
+    Example request:
+        example.com/index.php
+    Apache loads:
+        /var/www/example/public/index.php
+ 
+ErrorLog
+    ErrorLog ${APACHE_LOG_DIR}/example_error.log
+    Logs errors.
+ 
+CustomLog
+    CustomLog ${APACHE_LOG_DIR}/example_access.log combined
+    Logs requests.
+ 
+ 
+ 
+ 
+sites-available vs sites-enabled
+    -Apache uses symbolic links.
+    -sites-available
+        Stores configs.
+        /etc/apache2/sites-available/example.conf
+    -sites-enabled
+        Active sites - links to stored files in sites-available.
+        /etc/apache2/sites-enabled/example.conf
+ 
+all those new sites needs Directory permissions
+Need:
+<Directory /var/www/example/public>
+    Require all granted
+</Directory>
+ 
+How Apache Processes VirtualHosts
+Steps:
+    1️⃣ Apache receives request
+    2️⃣ Checks IP + port
+    3️⃣ Reads Host header
+    4️⃣ Matches ServerName or ServerAlias
+    5️⃣ Loads corresponding VirtualHost
+ 
+ 
+ 
+Default VirtualHost
+    If no match found:
+    Apache loads first VirtualHost defined.
+    Example:
+        000-default.conf
+    This acts as fallback..
