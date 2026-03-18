@@ -1,0 +1,89 @@
+🚀 Basic Apache Commands
+    Start Apache
+        sudo systemctl start apache2
+
+    Stop Apache
+        sudo systemctl stop apache2
+
+    Restart Apache
+        sudo systemctl restart apache2
+    👉 Full restart (used after major changes)
+
+    Reload Apache (IMPORTANT 🔥)
+        sudo systemctl reload apache2
+    👉 Reloads config without killing active connections
+
+    Check Status
+        sudo systemctl status apache2
+
+🧪 Configuration Commands
+    Test Config (VERY IMPORTANT)
+        sudo apachectl configtest
+    Output should be:
+        Syntax OK
+
+    Reload via apachectl
+        sudo apachectl graceful
+    👉 Same as reload (zero downtime)
+
+📂 Important File Locations
+    Main config
+        /etc/apache2/apache2.conf
+
+    Virtual Hosts
+        /etc/apache2/sites-available/
+        /etc/apache2/sites-enabled/
+
+    Default web root
+        /var/www/html
+
+🔗 Enable / Disable Site
+    Enable site
+        sudo a2ensite example.conf
+    
+    Disable site
+        sudo a2dissite example.conf
+
+    Apply changes
+        sudo systemctl reload apache2
+
+🔌 Enable / Disable Modules (VERY IMPORTANT)
+    Enable module
+        sudo a2enmod rewrite
+
+    Disable module
+        sudo a2dismod rewrite
+
+🧾 Logs (Debugging 🔥)
+    Access logs
+        /var/log/apache2/access.log
+
+    Error logs
+        /var/log/apache2/error.log
+
+    Live logs
+        tail -f /var/log/apache2/error.log
+
+⚙️ Process Commands
+    Show processes
+        ps aux | grep apache2
+
+    Kill Apache
+        sudo apachectl stop
+
+🌐 Port Check
+    sudo lsof -i :80
+
+🧪 Test Server
+    curl http://localhost
+
+🏗️ Virtual Host Example (Very Useful)
+    <VirtualHost *:80>
+        ServerName example.com
+        DocumentRoot /var/www/html
+
+        <Directory /var/www/html>
+            AllowOverride All
+            Require all granted
+        </Directory>
+    </VirtualHost>

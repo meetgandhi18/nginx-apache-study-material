@@ -1,0 +1,74 @@
+🚀 Basic NGINX Commands
+    Start NGINX
+        sudo systemctl start nginx
+    
+    Stop NGINX
+        sudo systemctl stop nginx
+    
+    Restart NGINX
+        sudo systemctl restart nginx
+    👉 Use when config changes completely
+    
+    Reload NGINX (IMPORTANT 🔥)
+        sudo systemctl reload nginx
+    👉 Reloads config without downtime
+   
+    Check Status
+        sudo systemctl status nginx
+
+🧪 Configuration Commands
+    Test Configuration (VERY IMPORTANT)
+        sudo nginx -t
+    👉 Always run before reload
+
+    Show Full Config
+        sudo nginx -T
+    👉 Prints all config files
+
+📂 File Locations (Important)
+    Main Config:
+        /etc/nginx/nginx.conf
+    
+    Site configs:
+        /etc/nginx/sites-available/
+        /etc/nginx/sites-enabled/
+
+🔗 Enable / Disable Site
+    Enable site
+        sudo ln -s /etc/nginx/sites-available/example /etc/nginx/sites-enabled/
+    
+    Disable site
+        sudo rm /etc/nginx/sites-enabled/example
+    
+    Apply changes
+        sudo systemctl reload nginx
+    
+🧾 Logs (Very Useful)
+    Access logs
+        /var/log/nginx/access.log
+    
+    Error logs
+        /var/log/nginx/error.log
+    
+    View logs live
+        tail -f /var/log/nginx/error.log
+
+⚙️ Process Commands
+    Show NGINX processes
+        ps aux | grep nginx
+
+    Kill NGINX manually
+        sudo nginx -s stop
+
+    Reload using NGINX command
+        sudo nginx -s reload
+
+🌐 Check Port Usage
+
+    sudo lsof -i :80
+            or
+    sudo ss -tulnp | grep nginx
+
+🧪 Test Server
+
+    curl http://localhost
