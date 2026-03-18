@@ -110,7 +110,7 @@ Pattern:
 ```
 Text:
 ```
-color colour colouur colorrrr
+color colour colouur colorrrr colo
 ```
 Output:
 ```
@@ -118,6 +118,7 @@ color
 colour
 colou
 colorrrr
+colo
 ```
 
 ---
@@ -129,10 +130,11 @@ Pattern:
 ```
 Text:
 ```
-color colour colorrrr
+color colour colorrrr colou
 ```
 Output:
 ```
+color
 colour
 colorrrr
 ```
